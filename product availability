@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <string.h>
+
+typedef struct {
+    char code[10];
+    char name[50];
+    int quantity;
+} Product;
+
+// Function to check availability
+int check_availability(Product items[], int count, char *search_code, int req_qty) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(items[i].code, search_code) == 0) {
+            if (items[i].quantity >= req_qty) {
+                // Deduct stock
+                items[i].quantity -= req_qty;
+                return 1; // Available
+            } else {
+                printf("Insufficient stock for %s. Available: %d\n", items[i].name, items[i].quantity);
+                return 0; // Not enough stock
+            }
+        }
+    }
+    return -1; // Not found
+}
+
+int main() {
+    Product inventory[] = {
+        {"A001", "Laptop", 10},
+        {"B002", "Mouse", 50},
+        {"C003", "Keyboard", 30}
+    };
+    int count = 3;
+
+    char code[10];
+    int qty;
+
+    printf("Enter product code: ");
+    scanf("%s", code);
+    printf("Enter quantity: ");
+    scanf("%d", &qty);
+
+    int status = check_availability(inventory, count, code, qty);
+
+    if (status == 1) {
+        printf("Product %s is available and sold.\n", code);
+    } else if (status == 0) {
+        printf("Product %s is in stock but insufficient quantity.\n", code);
+    } else {
+        printf("Product %s not found.\n", code);
+    }
+
+    return 0;
+}   
